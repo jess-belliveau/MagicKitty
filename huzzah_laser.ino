@@ -11,12 +11,15 @@ WifiLocation location(googleApiKey);
 // VARs
 long randNumber;
 int sensorPin = A0;
+int rainbowPin = 14;
 
 void setup()
 {
   Serial.begin(115200);
   Serial.println();
   randomSeed(analogRead(1));
+  pinMode(rainbowPin, OUTPUT);
+  digitalWrite(rainbowPin, LOW);
 
   // Connect to our wifi
   WiFi.begin(SSID, pwd);
@@ -45,13 +48,13 @@ void setup()
   Serial.println("Accuracy: " + String(loc.accuracy));
 
   // We are alive and accepting!
-  /*bool ok = postMessageToSlack("I'm alive and accepting donations from: " + String(loc.lat, 7) + "," + String(loc.lon, 7));
+  bool ok = postMessageToSlack("I'm alive and accepting donations from: " + String(loc.lat, 7) + "," + String(loc.lon, 7));
   if (ok) {
-    // In future, this will blink RED the LEDs
     // Indicate we are online
-    //digitalWrite(ledPin, HIGH);
+    digitalWrite(rainbowPin, HIGH);
     delay(1000);
-  }*/
+    digitalWrite(rainbowPin, LOW);
+  }
 }
 
 void loop()
@@ -64,16 +67,16 @@ void loop()
     Serial.print("CA-CHING: ");
     Serial.println(laser);
     // Call out a donation
-    /*bool ok = postMessageToSlack(slack_message[random(0,4)]);
+    bool ok = postMessageToSlack(slack_message[random(0,4)]);
     if (ok) {
       // In future, this will rainbow dance the LEDs
-      //digitalWrite(ledPin, HIGH);
-    }*/
+      digitalWrite(rainbowPin, HIGH);
+    }
     delay(3000);
   }
 
   // Turn off rainbows!
-  //digitalWrite(ledPin, LOW);
+  digitalWrite(rainbowPin, LOW);
 
   delay(50);
 }
