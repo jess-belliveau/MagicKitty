@@ -1,0 +1,14 @@
+//keys.h
+
+//SLACK CONFIG
+// this is your slack webhook url that is used to post the messages
+const String slack_hook_url = "https://hooks.slack.com/services/SECRET-UNIQUE-WEBHOOK";
+
+// GOOGLE API CONFIG
+// this is your API key that is used to query the Google Geolocation API
+const char* googleApiKey = "SuperSecretAPIKey";
+
+// WIFI CONFIG
+// and your wifi connection details
+char SSID[] = "ExtraCoolWifiName";
+char pwd[] = "SafestPasswordEver";

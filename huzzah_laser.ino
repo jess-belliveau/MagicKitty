@@ -1,6 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <WifiLocation.h>
-#include </Users/jbelliveau/Documents/Arduino/huzzah_laser/keys.h>
+#include "keys.h"
 
 //SLACK CONFIG
 char *slack_message[] = { "Donation received!", "Make it rain!",  "The pizza gods thank you!", "The money tree doth shake!", "InfraCoders stock on the rise!"};
@@ -23,19 +23,7 @@ void setup()
 
   // Connect to our wifi
   WiFi.begin(SSID, pwd);
-  Serial.print("Connecting");
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    Serial.print("Attempting to connect to WPA SSID: ");
-    Serial.println(SSID);
-    // wait 5 seconds for connection:
-    Serial.print("Status = ");
-    Serial.println(WiFi.status());
-    delay(500);
-  }
-  Serial.println();
-  Serial.print("Connected, IP address: ");
-  Serial.println(WiFi.localIP());
+  connectToWifi();
 
   // Determine location from Google API
   location_t loc = location.getGeoFromWiFi();
@@ -59,6 +47,12 @@ void setup()
 
 void loop()
 {
+  // Recover from a network drop
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    connectToWifi();
+  }
+  
   // Loop and check if something swoops down
   int laser = analogRead(sensorPin);
   if (laser < 900)
@@ -79,6 +73,25 @@ void loop()
   digitalWrite(rainbowPin, LOW);
 
   delay(50);
+}
+
+bool connectToWifi()
+{
+  Serial.print("Connecting");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.print("Attempting to connect to WPA SSID: ");
+    Serial.println(SSID);
+    // wait 5 seconds for connection:
+    Serial.print("Status = ");
+    Serial.println(WiFi.status());
+    delay(500);
+  }
+
+  Serial.println();
+  Serial.print("Connected, IP address: ");
+  Serial.println(WiFi.localIP());
+  return true;
 }
 
 bool postMessageToSlack(String msg)
